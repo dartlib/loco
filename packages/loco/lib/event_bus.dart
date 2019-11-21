@@ -4,7 +4,7 @@ typedef CancelSubscription();
 
 class EventBus {
   final StreamController _streamController;
-  final _eventHandlerMap = <Type, List<StreamSubscription>>{};
+  final _eventHandlerMap = <dynamic, List<StreamSubscription>>{};
 
   StreamController get streamController => _streamController;
 
