@@ -14,9 +14,7 @@ dependencies:
   path_provider:
 
   loco:
-    path: ../packages/loco
   loco_flutter:
-    path: ../packages/loco_flutter
 
   todos_app_core:
     path: ../../flutter_architecture_samples/todos_app_core/
@@ -24,6 +22,12 @@ dependencies:
     path: ../../flutter_architecture_samples/todos_repository_core/
 
   cupertino_icons: ^0.1.2
+
+dependency_overrides:
+  loco:
+    path: ../packages/loco
+  loco_flutter:
+    path: ../packages/loco_flutter
 
 dev_dependencies:
   pedantic: ^1.8.0+1
