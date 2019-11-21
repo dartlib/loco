@@ -1,7 +1,6 @@
 name: loco
 description: LoCo - Logical Components
 version: 0.0.1
-author: Rob Halff
 homepage: https://github.com/dartlib/loco.git
 
 environment:
