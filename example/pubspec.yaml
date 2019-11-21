@@ -1,0 +1,35 @@
+name: loco_example
+description: A LoCo Flutter Example.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.2.2 <3.0.0"
+
+dependencies:
+  equatable: ^0.6.1
+  flutter:
+    sdk: flutter
+
+  path_provider:
+
+  loco:
+    path: ../packages/loco
+  loco_flutter:
+    path: ../packages/loco_flutter
+
+  todos_app_core:
+    path: ../../flutter_architecture_samples/todos_app_core/
+  todos_repository_core:
+    path: ../../flutter_architecture_samples/todos_repository_core/
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  pedantic: ^1.8.0+1
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+  uses-material-design: true

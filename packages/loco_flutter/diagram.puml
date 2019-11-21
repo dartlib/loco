@@ -1,0 +1,252 @@
+@startuml
+set namespaceSeparator ::
+
+abstract class "loco_flutter::views_extension.dart::ViewsExtension<T>" {
+}
+
+"loco::extension.dart::Extension<State>" <|-- "loco_flutter::views_extension.dart::ViewsExtension<T>"
+"loco_flutter::views.dart::Views" <|-- "loco_flutter::views_extension.dart::ViewsExtension<T>"
+
+class "loco_flutter::view_wrapper.dart::ViewWrapperEvent<T>" {
+}
+
+class "loco_flutter::view_wrapper.dart::ViewWrapper<T>" {
+  +ViewBase child
+  +Channel channel
+  +_ViewWrapperState createState()
+}
+
+"loco_flutter::view_wrapper.dart::ViewWrapper<T>" o-- "loco_flutter::widgets::view_base.dart::ViewBase"
+"loco_flutter::view_wrapper.dart::ViewWrapper<T>" o-- "loco::channel.dart::Channel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "loco_flutter::view_wrapper.dart::ViewWrapper<T>"
+
+class "loco_flutter::view_wrapper.dart::_ViewWrapperState<T>" {
+  -dynamic Function() _cancelSubscription
+  +void initState()
+  +void dispose()
+  -void _handleEvent()
+  +Widget build()
+}
+
+"loco_flutter::view_wrapper.dart::_ViewWrapperState<T>" o-- "loco::event_bus.dart::dynamic Function()"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "loco_flutter::view_wrapper.dart::_ViewWrapperState<T>"
+
+class "loco_flutter::view_logic.dart::ViewLogic" {
+  -Channel _parentChannel
+  +Channel viewChannel
+  +void onState()
+  +void dispatch()
+  +void viewDispatcher()
+}
+
+"loco_flutter::view_logic.dart::ViewLogic" o-- "loco::channel.dart::Channel"
+"loco::logic.dart::OnRegister" <|-- "loco_flutter::view_logic.dart::ViewLogic"
+"loco::logic.dart::OnInit" <|-- "loco_flutter::view_logic.dart::ViewLogic"
+
+abstract class "loco_flutter::widgets::view.dart::View<TProps>" {
+  +TProps props
+  {static} +dynamic $()
+  +void onAttach()
+  {static} +T of()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "loco_flutter::widgets::view.dart::View<TProps>"
+"loco_flutter::mixins::channel_mixin.dart::ChannelMixin" <|-- "loco_flutter::widgets::view.dart::View<TProps>"
+"loco_flutter::mixins::state_builder_mixin.dart::StateBuilderMixin" <|-- "loco_flutter::widgets::view.dart::View<TProps>"
+"loco_flutter::slots.dart::Slots" <|-- "loco_flutter::widgets::view.dart::View<TProps>"
+"loco_flutter::widgets::view_base.dart::ViewBase" <|-- "loco_flutter::widgets::view.dart::View<TProps>"
+
+abstract class "loco_flutter::widgets::view_base.dart::ViewBase" {
+}
+
+class "loco_flutter::widgets::state_builder2.dart::StateBuilder2<T, V>" {
+  +dynamic Function(Channel) onListen
+  +Map<Type, dynamic> Function(BuildContext) builder
+  +dynamic Function(BuildContext) orElse
+  +AsyncSnapshot initial()
+  +AsyncSnapshot afterConnected()
+  +AsyncSnapshot afterData()
+  +AsyncSnapshot afterError()
+  +AsyncSnapshot afterDone()
+  +AsyncSnapshot afterDisconnected()
+  +Widget build()
+  +State createState()
+}
+
+"loco_flutter::widgets::state_builder2.dart::StateBuilder2<T, V>" o-- "loco_flutter::widgets::common::listen_callback.dart::dynamic Function(Channel)"
+"loco_flutter::widgets::state_builder2.dart::StateBuilder2<T, V>" o-- "loco_flutter::widgets::state_builder2.dart::Map<Type, dynamic> Function(BuildContext)"
+"loco_flutter::widgets::state_builder2.dart::StateBuilder2<T, V>" o-- "loco_flutter::widgets::state_builder2.dart::dynamic Function(BuildContext)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "loco_flutter::widgets::state_builder2.dart::StateBuilder2<T, V>"
+
+class "loco_flutter::widgets::state_builder2.dart::_StateBuilderState<T, V>" {
+  -StreamSubscription<T> _subscription
+  -AsyncSnapshot<T> _state
+  -Stream<T> _stream
+  -Channel _channel
+  +void initState()
+  +Widget build()
+  +void dispose()
+  -Future _subscribe()
+  -void _unsubscribe()
+}
+
+"loco_flutter::widgets::state_builder2.dart::_StateBuilderState<T, V>" o-- "dart::async::StreamSubscription<T>"
+"loco_flutter::widgets::state_builder2.dart::_StateBuilderState<T, V>" o-- "flutter::src::widgets::async.dart::AsyncSnapshot<T>"
+"loco_flutter::widgets::state_builder2.dart::_StateBuilderState<T, V>" o-- "dart::async::Stream<T>"
+"loco_flutter::widgets::state_builder2.dart::_StateBuilderState<T, V>" o-- "loco::channel.dart::Channel"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "loco_flutter::widgets::state_builder2.dart::_StateBuilderState<T, V>"
+
+abstract class "loco_flutter::widgets::view_part.dart::ViewPart" {
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "loco_flutter::widgets::view_part.dart::ViewPart"
+"loco_flutter::mixins::state_builder_mixin.dart::StateBuilderMixin" <|-- "loco_flutter::widgets::view_part.dart::ViewPart"
+"loco_flutter::widgets::view_base.dart::ViewBase" <|-- "loco_flutter::widgets::view_part.dart::ViewPart"
+
+abstract class "loco_flutter::widgets::stateful_view.dart::StatefulView<TProps>" {
+  +TProps props
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "loco_flutter::widgets::stateful_view.dart::StatefulView<TProps>"
+"loco_flutter::widgets::view_base.dart::ViewBase" <|-- "loco_flutter::widgets::stateful_view.dart::StatefulView<TProps>"
+"loco_flutter::mixins::channel_mixin.dart::ChannelMixin" <|-- "loco_flutter::widgets::stateful_view.dart::StatefulView<TProps>"
+"loco_flutter::mixins::state_builder_mixin.dart::StateBuilderMixin" <|-- "loco_flutter::widgets::stateful_view.dart::StatefulView<TProps>"
+
+class "loco_flutter::widgets::common::view_props.dart::ViewProps" {
+  +Key key
+}
+
+"loco_flutter::widgets::common::view_props.dart::ViewProps" o-- "flutter::src::foundation::key.dart::Key"
+
+abstract class "loco_flutter::widgets::view_builder.dart::ViewBuilder<V>" {
+  +dynamic buildState()
+  +dynamic buildStates()
+}
+
+class "loco_flutter::widgets::state_builder.dart::StateBuilder<T, V>" {
+  +dynamic Function(Channel) onListen
+  +Widget Function(BuildContext, AsyncSnapshot<T>) builder
+  +AsyncSnapshot initial()
+  +AsyncSnapshot afterConnected()
+  +AsyncSnapshot afterData()
+  +AsyncSnapshot afterError()
+  +AsyncSnapshot afterDone()
+  +AsyncSnapshot afterDisconnected()
+  +Widget build()
+  +State createState()
+}
+
+"loco_flutter::widgets::state_builder.dart::StateBuilder<T, V>" o-- "loco_flutter::widgets::common::listen_callback.dart::dynamic Function(Channel)"
+"loco_flutter::widgets::state_builder.dart::StateBuilder<T, V>" o-- "flutter::src::widgets::async.dart::Widget Function(BuildContext, AsyncSnapshot<T>)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "loco_flutter::widgets::state_builder.dart::StateBuilder<T, V>"
+
+class "loco_flutter::widgets::state_builder.dart::_StateBuilderState<T, V>" {
+  -StreamSubscription<T> _subscription
+  -AsyncSnapshot<T> _state
+  -Stream<T> _stream
+  -Channel _channel
+  +void initState()
+  +Widget build()
+  +void dispose()
+  -Future _subscribe()
+  -void _unsubscribe()
+}
+
+"loco_flutter::widgets::state_builder.dart::_StateBuilderState<T, V>" o-- "dart::async::StreamSubscription<T>"
+"loco_flutter::widgets::state_builder.dart::_StateBuilderState<T, V>" o-- "flutter::src::widgets::async.dart::AsyncSnapshot<T>"
+"loco_flutter::widgets::state_builder.dart::_StateBuilderState<T, V>" o-- "dart::async::Stream<T>"
+"loco_flutter::widgets::state_builder.dart::_StateBuilderState<T, V>" o-- "loco::channel.dart::Channel"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "loco_flutter::widgets::state_builder.dart::_StateBuilderState<T, V>"
+
+abstract class "loco_flutter::core::core_events.dart::CoreEvent" {
+}
+
+class "loco_flutter::core::core_events.dart::StartAppEvent" {
+}
+
+"loco_flutter::core::core_events.dart::CoreEvent" <|-- "loco_flutter::core::core_events.dart::StartAppEvent"
+
+class "loco_flutter::view_dependencies.dart::ViewDependencies" {
+  +Channel channel
+}
+
+"loco_flutter::view_dependencies.dart::ViewDependencies" o-- "loco::channel.dart::Channel"
+
+abstract class "loco_flutter::app.dart::App<BaseState>" {
+}
+
+"loco::extension.dart::Extension<State>" <|-- "loco_flutter::app.dart::App<BaseState>"
+"loco_flutter::mixins::navigation_mixin.dart::NavigationMixin" <|-- "loco_flutter::app.dart::App<BaseState>"
+
+class "loco_flutter::view_dispatcher.dart::ViewDispatcher" {
+  {static} +dynamic of()
+}
+
+abstract class "loco_flutter::view_list.dart::ViewList" {
+  +List build()
+}
+
+"loco_flutter::mixins::channel_mixin.dart::ChannelMixin" <|-- "loco_flutter::view_list.dart::ViewList"
+"loco_flutter::mixins::state_builder_mixin.dart::StateBuilderMixin" <|-- "loco_flutter::view_list.dart::ViewList"
+"loco_flutter::slots.dart::Slots" <|-- "loco_flutter::view_list.dart::ViewList"
+"loco_flutter::widgets::view_base.dart::ViewBase" <|-- "loco_flutter::view_list.dart::ViewList"
+
+class "loco_flutter::views.dart::ViewsLogic" {
+  +Channel channel
+  -Map<Type, dynamic> _instances
+  -Map<Type, Map<String, dynamic>> _slots
+  -Map<Type, dynamic> _views
+  +void registerView()
+  +ViewWrapper getView()
+  +ViewWrapper getViewWithProps()
+  -T _getView()
+  -T _getViewWithProps()
+  +T getViewList()
+  +T getViewListWithProps()
+  +void setSlot()
+  +void setSlots()
+}
+
+"loco_flutter::views.dart::ViewsLogic" o-- "loco::channel.dart::Channel"
+"loco::logic.dart::BaseLogic<BaseState>" <|-- "loco_flutter::views.dart::ViewsLogic"
+
+abstract class "loco_flutter::views.dart::Views" {
+  +ViewsLogic views
+}
+
+"loco_flutter::views.dart::Views" o-- "loco_flutter::views.dart::ViewsLogic"
+
+abstract class "loco_flutter::mixins::state_builder_mixin.dart::StateBuilderMixin" {
+  +Widget buildState()
+  +Widget buildStates()
+}
+
+abstract class "loco_flutter::mixins::navigation_mixin.dart::NavigationMixin" {
+  +Map<String, Route<dynamic> Function(Map<String, dynamic>)> routes
+  +dynamic addRoute()
+  +Route onGenerateRoute()
+  +PageRouteBuilder buildRoute()
+}
+
+abstract class "loco_flutter::mixins::channel_mixin.dart::ChannelMixin" {
+  -ViewDependencies _viewDependencies
+  +Channel channel
+  +Function onEvent()
+  +void dispatch()
+  +void setChannel()
+}
+
+"loco_flutter::mixins::channel_mixin.dart::ChannelMixin" o-- "loco_flutter::view_dependencies.dart::ViewDependencies"
+"loco_flutter::mixins::channel_mixin.dart::ChannelMixin" o-- "loco::channel.dart::Channel"
+
+abstract class "loco_flutter::slots.dart::Slots" {
+  -Map<String, ViewWrapper<ViewWrapperEvent<ViewBase>>> _slots
+  -Map<String, List<ViewWrapper<ViewWrapperEvent<ViewBase>>>> _multiSlots
+  +dynamic setSlot()
+  +dynamic setMultiSlot()
+  +ViewWrapper slot()
+  +List multiSlot()
+}
+
+
+@enduml
